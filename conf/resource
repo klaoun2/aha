@@ -1,0 +1,21 @@
+{
+	"worker-plugin": {
+		"plugins": [{
+			"id": "apache24",
+			"acquire": "enable",
+			"release": "disable",
+			"relpath": "worker/libapache24worker.so",
+			"api-version": {
+				"major": 1,
+				"minor": 0
+			}
+		}]
+	},
+	"syslog-config": {
+	   "patterndb-relpath": "misc/syslog.conf",
+	   "logrotate-relpath": "misc/logrotate.conf"
+	},
+	"usr-local-linker": {
+		"bin": ["usr/local/bin/httpd24"]
+	}
+}

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+MAJOR_VER=2
+MINOR_VER=4
+VER="${MAJOR_VER}${MINOR_VER}"
+PKG_PATH="/var/packages/Apache${MAJOR_VER}.${MINOR_VER}/target"
+CONF_FILES="conf run logs"
+
+_LINK_CONF()
+{
+	if [ ! -d "/usr/local/etc/apache${VER}" ]; then
+		mkdir -p "/usr/local/etc/apache${VER}"
+	fi
+	for file in $CONF_FILES; do
+		local filepath="/usr/local/etc/apache${VER}/${file}"
+		[ -e "${filepath}" ] && /usr/bin/rm "${filepath}"
+		/usr/bin/ln -sf "${PKG_PATH}/usr/local/etc/apache${VER}/${file}" "${filepath}"
+	done
+
+	if [ ! -e "/usr/local/etc/apache${VER}/modules" ]; then
+		ln -sf "${PKG_PATH}"/usr/local/lib/modules /usr/local/etc/apache${VER}/modules
+	fi
+}
+DO_LINK()
+{
+	_LINK_CONF
+}
+DO_REMOVE()
+{
+	for file in $CONF_FILES; do
+		local file_path="/usr/local/etc/apache${VER}/${file}"
+		[ -L "${file_path}" ] && /usr/bin/rm "${file_path}"
+	done
+	[ -L "/usr/local/etc/apache${VER}/modules" ] && /usr/bin/rm "/usr/local/etc/apache${VER}/modules"
+}
+

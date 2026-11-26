@@ -1,0 +1,24 @@
+#!/bin/bash
+
+. "$(dirname "$0")/common"
+DO_LINK
+
+LOGFILE="/var/log/httpd/apache24*"
+VARDIR="/var/packages/Apache2.4/var"
+
+config_root_path=/usr/local/etc/apache24/
+conf_path_dir="conf-available conf-enabled sites-available sites-enabled"
+
+for dir in $conf_path_dir; do
+	/usr/bin/mkdir -p "$config_root_path$dir"
+done
+
+#Migrate log from root to volume
+if [ -h "${VARDIR}" ]; then
+    mkdir -p "${VARDIR}/log"
+    if compgen -G $LOGFILE > /dev/null; then 
+        /usr/bin/mv $LOGFILE "${VARDIR}/log/"
+    fi
+fi
+
+exit 0

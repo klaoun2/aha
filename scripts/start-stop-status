@@ -1,0 +1,28 @@
+#!/bin/sh
+. "$(dirname "$0")/common"
+
+case "$1" in
+	start)
+		if [ ! -d "/usr/local/etc/apache${VER}/sites-enabled/" ]; then
+			/usr/bin/mkdir -p "/usr/local/etc/apache${VER}/sites-enabled/" 
+		fi
+		/usr/syno/bin/synosystemctl start pkg-apache24 || true
+		status=$(/usr/syno/bin/synosystemctl get-active-status pkg-apache24)
+		if [[ "$status" == "active" || "$status" == "activating" ]]; then
+			exit 0
+		else
+			exit 1 
+		fi
+		;;
+	stop)
+		/usr/syno/bin/synosystemctl stop pkg-apache24 || true
+		;;
+	status)
+		status=$(/usr/syno/bin/synosystemctl get-active-status pkg-apache24)
+		if [ "$status" == active ]; then
+			exit 0
+		else
+			exit 1 
+		fi
+		;;
+esac

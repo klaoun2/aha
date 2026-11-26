@@ -1,0 +1,17 @@
+[Unit]
+Description=Apache2.4 daemon
+IgnoreOnIsolate=true
+DefaultDependencies=no
+
+[Service]
+Type=forking
+PIDFile=/run/httpd/httpd24.pid
+ExecStartPre=/var/packages/Apache2.4/target/misc/apache24_exec_start_pre.sh
+ExecStart=/var/packages/Apache2.4/target/usr/local/bin/httpd24
+ExecReload=/bin/kill -USR1 $MAINPID
+ExecStopPost=/usr/bin/rm -f /run/httpd/httpd24.pid
+Restart=on-failure
+Slice=syno_dsm_internal.slice
+TimeoutStartSec=1200
+
+[X-Synology]
